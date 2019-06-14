@@ -1,9 +1,13 @@
 # aws-lambda-graal-native-image
-Run Java code as Graal native image on AWS Lambda custom runtime.
+Run Java code as Graal native image on AWS Lambda custom runtime, exposed by the AWS API gateway.
 
+Acknowledgements
+---
 This repository is based on the following resources:
 - http://how-to.vertx.io/aws-native-image-lambda-howto/  
 - https://github.com/pmlopes/aws-lambda-native-vertx
+
+Credits to @pmlopes and the Vert.x team for documenting it!
 
 Preparation/installation of build environment
 ---
@@ -34,7 +38,7 @@ aws iam delete-role --role-name lambda-role
 aws iam create-role --role-name lambda-role --path "/service-role/" --assume-role-policy-document file://policy.json
 ```
 
-Note the ARN that is returned, you need it in one of the next steps
+Note the ARN that is returned, you need it in one of the next steps.
 
 
 Building the native image
@@ -69,7 +73,7 @@ cat response.txt
 
 Accessing over http
 ---
-Described in this tutorial: https://docs.aws.amazon.com/lambda/latest/dg/with-on-demand-https-example.html
+Steps here are based on this tutorial: https://docs.aws.amazon.com/lambda/latest/dg/with-on-demand-https-example.html.
 
 Define variables:
 ```
