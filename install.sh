@@ -5,7 +5,7 @@ sudo yum install git
 sudo yum install gcc
 sudo yum install zlib-devel
 
-git clone https://github.com/bertjan/aws-lambda-graal-native-image
+git clone https://github.com/bertjan/graal-native-image-aws-lambda
 wget https://github.com/oracle/graal/releases/download/vm-1.0.0-rc16/graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz
 tar xfzv graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz
 
@@ -14,4 +14,4 @@ aws iam create-role --role-name lambda-role --path "/service-role/" --assume-rol
 
 # note the ARN that is returned, you need it in the next step
 
-cd aws-lambda-graal-native-image
+cd graal-native-image-aws-lambda
