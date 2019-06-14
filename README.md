@@ -11,6 +11,8 @@ Credits go to @pmlopes and the Vert.x team for sharing the resources above.
 
 Preparation/installation of build environment
 ---
+You need a Linux box to build a native image for Linux. I used an AWS EC2 instance. A Linux laptop or Windows laptop with Linux subsystem should/might work too. YMMV ;-)    
+
 Fire up an AWS Linux instance. If you're going for t2 (burstable), use at least a t2.large instance.  
 I used AMI `Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type`.  
 
