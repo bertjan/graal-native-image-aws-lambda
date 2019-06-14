@@ -11,8 +11,9 @@ Credits go to @pmlopes and the Vert.x team for sharing the resources above.
 
 Preparation/installation of build environment
 ---
-Fire up an AWS Linux instance. If you're going for t2 (burstable), use at least a t2.large instance.
+Fire up an AWS Linux instance. If you're going for t2 (burstable), use at least a t2.large instance.  
 I used AMI `Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type`.  
+
 Log in to the Linux instance.
 
 Configure the AWS cli via `aws configure`
@@ -38,7 +39,7 @@ aws iam delete-role --role-name lambda-role
 aws iam create-role --role-name lambda-role --path "/service-role/" --assume-role-policy-document file://policy.json
 ```
 
-Note the ARN that is returned, you need it in one of the next steps.
+Note the ARN that is returned, you need the account number (part of the ARN) in one of the next steps.
 
 
 Building the native image
@@ -58,13 +59,14 @@ LAMBDA_ARN="027298914325"
 rm -f function.zip
 zip -r function.zip bootstrap target/lambda
 aws lambda delete-function --function-name vertxNativeTester
-aws lambda create-function --function-name vertxNativeTester --zip-file fileb://function.zip --handler lambda.QOTDLambda --runtime provided --role arn:aws:iam::${LAMBDA_ARN}:role/service-role/lambda-role
+aws lambda create-function --function-name vertxNativeTester --zip-file fileb://function.zip --handler lambda.EchoLambda --runtime provided --role arn:aws:iam::${LAMBDA_ARN}:role/service-role/lambda-role
 aws lambda update-function-configuration --function-name vertxNativeTester --layers arn:aws:lambda:eu-west-1:${LAMBDA_ARN}:layer:vertx-native-example:1
 ```
  
 
-Executing the lambda
+Testing the lambda
 ---
+Use the AWS CLI to invoke the lambda directly:
 ```
 aws lambda invoke --function-name vertxNativeTester     --payload '{"message":"Hello World"}'     --log-type Tail response.txt | grep "LogResult" | awk -F'"' '{print $4}' | base64 --decode
 cat response.txt
@@ -83,25 +85,25 @@ LAMBDA_NAME="vertxNativeTester"
 PATH_PART="APIGatewayPathPart1"
 ```
 
-Create REST API:
+Create the REST API:
 ```
 aws apigateway create-rest-api --name $API_GW_NAME
 API=<id from response>
 ```
 
-Get resource ID:
+Get the resource ID:
 ```
 aws apigateway get-resources --rest-api-id $API
 PARENT_ID=<id from response>
 ```
 
-Create resource:
+Create a resource:
 ```
 aws apigateway create-resource --rest-api-id $API  --path-part $PATH_PART --parent-id $PARENT_ID
 RESOURCE=<id from response>
 ```
 
-Configure POST method:
+Configure the POST method:
 ```
 aws apigateway put-method --rest-api-id $API --resource-id $RESOURCE --http-method POST --authorization-type NONE
 ```
@@ -118,7 +120,7 @@ aws lambda add-permission --function-name $LAMBDA_NAME --statement-id apigateway
 aws lambda add-permission --function-name $LAMBDA_NAME --statement-id apigateway-prod-${API_GW_NAME} --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn "arn:aws:execute-api:$REGION:$ACCOUNT:$API/prod/POST/${PATH_PART}"
 ```
 
-Get URL
+Get the API gateway URL
 ```
 echo https://${API}.execute-api.$REGION.amazonaws.com/prod/${PATH_PART}
 ```
