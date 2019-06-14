@@ -21,4 +21,8 @@ aws lambda add-permission --function-name $LAMBDA_NAME --statement-id apigateway
 aws lambda add-permission --function-name $LAMBDA_NAME --statement-id apigateway-prod-${API_GW_NAME} --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn "arn:aws:execute-api:$REGION:$ACCOUNT:$API/prod/POST/${PATH_PART}"
 
 # get url
-echo https://${API}.execute-api.$REGION.amazonaws.com/prod/${PATH_PART}
+URL=https://${API}.execute-api.$REGION.amazonaws.com/prod/${PATH_PART}
+echo $URL
+
+# take it for a spin:
+curl -XPOST $URL
